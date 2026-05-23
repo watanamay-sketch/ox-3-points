@@ -32,6 +32,35 @@
         </div>
       </section>
 
+      <section class="controls-panel" aria-label="สถิติและโหมด">
+        <div class="stats">
+          <div>
+            <span>จำนวนเกม</span>
+            <strong id="gameCount">0</strong>
+          </div>
+          <div>
+            <span>X ชนะ</span>
+            <strong id="xWins">0</strong>
+          </div>
+          <div>
+            <span>O ชนะ</span>
+            <strong id="oWins">0</strong>
+          </div>
+        </div>
+
+        <div class="mode-row">
+          <button class="mode-button is-selected" id="forcedModeButton" type="button" data-mode="forced">
+            บังคับย้าย
+          </button>
+          <button class="mode-button" id="randomModeButton" type="button" data-mode="random">
+            สุ่มย้าย
+          </button>
+          <button class="clear-button" id="clearStatsButton" type="button">
+            ล้างสถิติ
+          </button>
+        </div>
+      </section>
+
       <section class="board-wrap">
         <div class="board" id="board" role="grid" aria-label="กระดาน OX 3 คูณ 3"></div>
       </section>
@@ -39,7 +68,7 @@
       <section class="rules" aria-label="กติกา">
         <div>
           <strong>กติกา</strong>
-          <p>วางได้คนละ 3 จุดเท่านั้น จากนั้นแต่ละตาต้องย้ายตัวที่วางเก่าสุดของฝั่งตัวเองไปช่องว่าง ใครเรียงครบ 3 ก่อนชนะ</p>
+          <p id="rulesText">วางได้คนละ 3 จุดเท่านั้น จากนั้นแต่ละตาต้องย้ายตัวที่วางเก่าสุดของฝั่งตัวเองไปช่องว่าง ใครเรียงครบ 3 ก่อนชนะ</p>
         </div>
       </section>
     </main>
