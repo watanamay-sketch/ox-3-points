@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>OX 3 จุด</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app" aria-labelledby="game-title">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">เกม OX 3x3</p>
+          <h1 id="game-title">OX 3 จุด</h1>
+        </div>
+        <button class="icon-button" id="resetButton" type="button" aria-label="เริ่มเกมใหม่" title="เริ่มเกมใหม่">
+          <span aria-hidden="true">↻</span>
+        </button>
+      </section>
+
+      <section class="status-panel" aria-live="polite">
+        <div class="turn-card" data-player="X">
+          <span class="mark">X</span>
+          <span class="label">ผู้เล่น X</span>
+          <span class="count" id="xCount">0/3</span>
+        </div>
+        <div class="message" id="message">ตา X: วางหมากช่องว่าง</div>
+        <div class="turn-card" data-player="O">
+          <span class="mark">O</span>
+          <span class="label">ผู้เล่น O</span>
+          <span class="count" id="oCount">0/3</span>
+        </div>
+      </section>
+
+      <section class="board-wrap">
+        <div class="board" id="board" role="grid" aria-label="กระดาน OX 3 คูณ 3"></div>
+      </section>
+
+      <section class="rules" aria-label="กติกา">
+        <div>
+          <strong>กติกา</strong>
+          <p>วางได้คนละ 3 จุดเท่านั้น จากนั้นแต่ละตาต้องย้ายตัวที่วางเก่าสุดของฝั่งตัวเองไปช่องว่าง ใครเรียงครบ 3 ก่อนชนะ</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
