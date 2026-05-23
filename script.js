@@ -37,7 +37,6 @@ let winner;
 let selectedIndex;
 let winningLine;
 let moveMode = "forced";
-let requiredMoves;
 let stats = { games: 0, X: 0, O: 0 };
 
 function newGame() {
@@ -48,7 +47,6 @@ function newGame() {
   winner = "";
   selectedIndex = null;
   winningLine = [];
-  requiredMoves = { X: null, O: null };
   render();
 }
 
@@ -87,7 +85,6 @@ function placePiece(index) {
 
   if (queues.X.length === 3 && queues.O.length === 3) {
     phase = "move";
-    prepareRequiredMove(turn === "X" ? "O" : "X");
   }
 
   switchTurn();
@@ -97,8 +94,8 @@ function placePiece(index) {
 function movePiece(index) {
   const requiredIndex = getRequiredIndex(turn);
 
-  if (index === requiredIndex) {
-    selectedIndex = requiredIndex;
+  if (board[index] === turn && canSelectPiece(index, requiredIndex)) {
+    selectedIndex = index;
     render();
     return;
   }
@@ -109,7 +106,6 @@ function movePiece(index) {
   board[index] = turn;
   removeMovedPiece(turn, selectedIndex);
   queues[turn].push(index);
-  requiredMoves[turn] = null;
   selectedIndex = null;
 
   if (finishTurn()) return;
@@ -134,7 +130,6 @@ function finishTurn() {
 function switchTurn() {
   turn = turn === "X" ? "O" : "X";
   selectedIndex = null;
-  prepareRequiredMove(turn);
 }
 
 function getWinningLine(player) {
@@ -142,27 +137,8 @@ function getWinningLine(player) {
 }
 
 function getRequiredIndex(player) {
-  if (phase !== "move") return null;
-
-  if (moveMode === "forced") return queues[player][0];
-
-  if (!queues[player].includes(requiredMoves[player])) {
-    prepareRequiredMove(player);
-  }
-
-  return requiredMoves[player];
-}
-
-function prepareRequiredMove(player) {
-  if (phase !== "move") return;
-
-  if (moveMode === "forced") {
-    requiredMoves[player] = queues[player][0];
-    return;
-  }
-
-  const pieces = queues[player];
-  requiredMoves[player] = pieces[Math.floor(Math.random() * pieces.length)];
+  if (phase !== "move" || moveMode === "free") return null;
+  return queues[player][0];
 }
 
 function removeMovedPiece(player, index) {
@@ -194,7 +170,8 @@ function render() {
     const value = board[index];
     cell.textContent = value;
     cell.dataset.value = value;
-    cell.classList.toggle("is-next", index === requiredIndex);
+    const selectable = phase === "move" && !winner && board[index] === turn && canSelectPiece(index, requiredIndex);
+    cell.classList.toggle("is-next", selectable);
     cell.classList.toggle("is-target", selectedIndex !== null && !value);
     cell.classList.toggle("is-win", winningLine.includes(index));
     cell.disabled = Boolean(winner);
@@ -222,18 +199,26 @@ function getMessage(requiredIndex) {
   }
 
   if (selectedIndex === null) {
+    if (moveMode === "free") {
+      return `ตา ${turn}: เลือกหมากของตัวเอง แล้วเลือกช่องว่าง`;
+    }
+
     return `ตา ${turn}: แตะตัวที่ไฮไลต์ แล้วเลือกช่องว่าง`;
   }
 
-  return `ตา ${turn}: ย้ายจากช่อง ${requiredIndex + 1} ไปช่องว่าง`;
+  return `ตา ${turn}: ย้ายจากช่อง ${selectedIndex + 1} ไปช่องว่าง`;
 }
 
 function getRulesText() {
-  if (moveMode === "random") {
-    return "วางได้คนละ 3 จุดเท่านั้น จากนั้นระบบจะสุ่มตัวหมากของตานั้นให้ย้ายไปช่องว่าง ใครเรียงครบ 3 ก่อนชนะ";
+  if (moveMode === "free") {
+    return "วางได้คนละ 3 จุดเท่านั้น จากนั้นผู้เล่นเลือกย้ายหมากของตัวเองตัวไหนก็ได้ไปช่องว่าง ใครเรียงครบ 3 ก่อนชนะ";
   }
 
   return "วางได้คนละ 3 จุดเท่านั้น จากนั้นแต่ละตาต้องย้ายตัวที่วางเก่าสุดของฝั่งตัวเองไปช่องว่าง ใครเรียงครบ 3 ก่อนชนะ";
+}
+
+function canSelectPiece(index, requiredIndex) {
+  return moveMode === "free" || index === requiredIndex;
 }
 
 resetButton.addEventListener("click", newGame);
